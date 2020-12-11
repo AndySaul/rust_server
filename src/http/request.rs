@@ -1,24 +1,24 @@
 use super::method::{Method, MethodError};
-use std::str;
-use std::str::Utf8Error;
-
+use super::QueryString;
 use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
- 
+use std::str;
+use std::str::Utf8Error;
+
 // Request uses the lifetime of the buffer
 pub struct Request<'buffer> {
     path: &'buffer str,
-    query_string: Option<&'buffer str>,
+    query_string: Option<QueryString<'buffer>>,
     method: Method,
 }
 
-impl<'buffer> TryFrom<&'buffer[u8]> for Request<'buffer> {
+impl<'buffer> TryFrom<&'buffer [u8]> for Request<'buffer> {
     type Error = ParseError;
 
     // GET /search?name=abc&sort=1 HTTP/1.1
 
-    fn try_from(buf: &'buffer[u8]) -> Result<Self, Self::Error> {
+    fn try_from(buf: &'buffer [u8]) -> Result<Self, Self::Error> {
         let request = str::from_utf8(buf)?;
 
         let (method, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
@@ -34,7 +34,7 @@ impl<'buffer> TryFrom<&'buffer[u8]> for Request<'buffer> {
         let mut query_string = None;
 
         if let Some(i) = path.find('?') {
-            query_string = Some(&path[i + 1..]);
+            query_string = Some(QueryString::from(&path[i + 1..]));
             path = &path[..i];
         }
 
