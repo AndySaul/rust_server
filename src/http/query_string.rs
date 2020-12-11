@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct QueryString<'buffer> {
     data: HashMap<&'buffer str, Value<'buffer>>,
 }
 
+#[derive(Debug)]
 pub enum Value<'buffer> {
     Single(&'buffer str),
     Multiple(Vec<&'buffer str>),
