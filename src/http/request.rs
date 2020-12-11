@@ -1,4 +1,6 @@
 use super::method::Method;
+use std::str;
+use std::str::Utf8Error;
 
 use std::convert::TryFrom;
 use std::error::Error;
@@ -16,17 +18,25 @@ impl TryFrom<&[u8]> for Request {
     // GET /search?name=abc&sort=1 HTTP/1.1
 
     fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
+        let request = str::from_utf8(buf)?;
+
         unimplemented!()
     }
 }
 
-impl Display for ParseError{
+impl From<Utf8Error> for ParseError {
+    fn from(_: Utf8Error) -> Self {
+        Self::InvalidEncoding
+    }
+}
+
+impl Display for ParseError {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{}", self.message())
     }
 }
 
-impl Debug for ParseError{
+impl Debug for ParseError {
     fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{}", self.message())
     }
@@ -50,4 +60,4 @@ impl ParseError {
     }
 }
 
-impl Error for ParseError{}
+impl Error for ParseError {}
