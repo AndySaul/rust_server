@@ -1,6 +1,6 @@
-use crate::http::Request;
+use crate::http::{Request, Response, StatusCode};
 use std::convert::TryFrom;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::net::TcpListener;
 
 pub struct Server {
@@ -28,6 +28,11 @@ impl Server {
                             match Request::try_from(&buffer[..]) {
                                 Ok(request) => {
                                     dbg!(request);
+                                    let response = Response::new(
+                                        StatusCode::Ok,
+                                        Some("<h1>Hello from Wombat!</h1>".to_string()),
+                                    );
+                                    response.send(&mut stream);
                                 }
                                 Err(e) => println!("Faied to read request: {}", e),
                             }
