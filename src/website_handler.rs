@@ -3,13 +3,13 @@ use super::server::Handler;
 use std::fs;
 use std::path::PathBuf;
 
-pub struct WebsiteHandler {
+pub struct Website {
     public_path: String,
 }
 
-impl WebsiteHandler {
+impl Website {
     pub fn new(public_path: String) -> Self {
-        Self { public_path }
+        Website { public_path }
     }
 
     fn read_file(&self, file_path: &str) -> Option<String> {
@@ -41,7 +41,7 @@ impl WebsiteHandler {
     }
 }
 
-impl Handler for WebsiteHandler {
+impl Handler for Website {
     fn handle_request(&mut self, request: &Request) -> Response {
         match request.method() {
             Method::GET => match request.path() {
