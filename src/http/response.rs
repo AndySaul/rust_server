@@ -18,6 +18,8 @@ impl Response {
             None => "",
         };
 
+        println!("Response: {} {}\n", self.status_code, self.status_code.reason_phrase());
+
         write!(
             stream,
             "HTTP/1.1 {} {}\r\n\r\n{}",

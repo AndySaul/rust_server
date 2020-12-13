@@ -15,31 +15,32 @@ impl Website {
     fn read_file(&self, file_path: &str) -> Option<String> {
         let absolute_path = PathBuf::from(format!("{}/{}", self.public_path, file_path));
 
-        if !absolute_path.is_file() {
+        if !self.verify(&absolute_path) {
             return None;
         }
 
-        match absolute_path.canonicalize() {
-            Err(_) => None,
-            Ok(path) => {
-                println!("display: {}", path.display());
+        fs::read_to_string(absolute_path).ok()
+    }
 
+    fn verify(&self, path: &PathBuf) -> bool {
+        if !path.is_file() {
+            return false;
+        }
+        self.is_in_public_folder(path)
+    }
+
+    fn is_in_public_folder(&self, path: &PathBuf) -> bool {
+        match path.canonicalize() {
+            Err(_) => false,
+            Ok(path) => {
                 let public = PathBuf::from(&self.public_path);
                 match public.canonicalize() {
-                    Err(_) => None,
-                    Ok(p) => {
-                        if path.starts_with(p) {
-                            fs::read_to_string(path).ok()
-                        } else {
-                            println!("Directory Traversal Attack attempted: {}", file_path);
-                            None
-                        }
-                    }
+                    Err(_) => false,
+                    Ok(p) => path.starts_with(p),
                 }
             }
         }
     }
-
 }
 
 impl Handler for Website {
