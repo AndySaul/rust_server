@@ -19,12 +19,14 @@ impl Website {
             return None;
         }
 
-        match absolute_path.as_path().canonicalize() {
+        match absolute_path.canonicalize() {
+            Err(_) => None,
             Ok(path) => {
                 println!("display: {}", path.display());
 
                 let public = PathBuf::from(&self.public_path);
-                match public.as_path().canonicalize() {
+                match public.canonicalize() {
+                    Err(_) => None,
                     Ok(p) => {
                         if path.starts_with(p) {
                             fs::read_to_string(path).ok()
@@ -33,12 +35,11 @@ impl Website {
                             None
                         }
                     }
-                    Err(_) => None,
                 }
             }
-            Err(_) => None,
         }
     }
+
 }
 
 impl Handler for Website {

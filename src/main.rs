@@ -11,7 +11,7 @@ fn main() {
     server.run(Website::new(public_path()));
 }
 
-fn public_path() -> String{
+fn public_path() -> String {
     let default_path = format!("{}/public", env!("CARGO_MANIFEST_DIR"));
     env::var("PUBLIC_PATH").unwrap_or(default_path)
 }
