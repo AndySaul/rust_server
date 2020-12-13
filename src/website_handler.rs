@@ -1,6 +1,7 @@
 use super::http::{Method, Request, Response, StatusCode};
 use super::server::Handler;
 use std::fs;
+use std::path::PathBuf;
 
 pub struct WebsiteHandler {
     public_path: String,
@@ -12,8 +13,31 @@ impl WebsiteHandler {
     }
 
     fn read_file(&self, file_path: &str) -> Option<String> {
-        let path = format!("{}/{}", self.public_path, file_path);
-        fs::read_to_string(path).ok()
+        let absolute_path = PathBuf::from(format!("{}/{}", self.public_path, file_path));
+
+        if !absolute_path.is_file() {
+            return None;
+        }
+
+        match absolute_path.as_path().canonicalize() {
+            Ok(path) => {
+                println!("display: {}", path.display());
+
+                let public = PathBuf::from(&self.public_path);
+                match public.as_path().canonicalize() {
+                    Ok(p) => {
+                        if path.starts_with(p) {
+                            fs::read_to_string(path).ok()
+                        } else {
+                            println!("Directory Traversal Attack attempted: {}", file_path);
+                            None
+                        }
+                    }
+                    Err(_) => None,
+                }
+            }
+            Err(_) => None,
+        }
     }
 }
 
@@ -23,7 +47,10 @@ impl Handler for WebsiteHandler {
             Method::GET => match request.path() {
                 "/" => Response::new(StatusCode::Ok, self.read_file("index.html")),
                 "/hello" => Response::new(StatusCode::Ok, self.read_file("hello.html")),
-                _ => Response::new(StatusCode::NotFound, None),
+                path => match self.read_file(path) {
+                    Some(contents) => Response::new(StatusCode::Ok, Some(contents)),
+                    None => Response::new(StatusCode::NotFound, None),
+                },
             },
             _ => Response::new(StatusCode::NotFound, None),
         }
