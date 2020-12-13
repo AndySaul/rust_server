@@ -2,8 +2,6 @@ use server::Server;
 use std::env;
 use website_handler::WebsiteHandler;
 
-use std::path::PathBuf;
-
 mod http;
 mod server;
 mod website_handler;

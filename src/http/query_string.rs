@@ -11,11 +11,11 @@ pub enum Value<'buffer> {
     Multiple(Vec<&'buffer str>),
 }
 
-impl<'buffer> QueryString<'buffer> {
-    pub fn get(&self, key: &str) -> Option<&Value> {
-        self.data.get(key)
-    }
-}
+// impl<'buffer> QueryString<'buffer> {
+//     pub fn get(&self, key: &str) -> Option<&Value> {
+//         self.data.get(key)
+//     }
+// }
 
 // a=1&b=2&c&d=&e===&d=7&d=abc
 impl<'buffer> From<&'buffer str> for QueryString<'buffer> {
