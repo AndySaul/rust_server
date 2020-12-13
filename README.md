@@ -1,10 +1,12 @@
 # Rust server
 
-My first stab at Rust
+My first stab at Rust. Currently, this is a single-threaded webserver with limited features. Next steps:
+- Make it multithreaded
+- Add unit tests
 
-This is based on the Udemy course https://www.udemy.com/course/rust-fundamentals/
-
-Also on the Rust book https://doc.rust-lang.org/book/title-page.html
+This is based on the 
+[Udemy course](https://www.udemy.com/course/rust-fundamentals/ "Learn Rust by Building Real Applications")
+and the [Rust Book](https://doc.rust-lang.org/book/title-page.html "The Rust Programming Language")
 
 ## Installing rust
 
