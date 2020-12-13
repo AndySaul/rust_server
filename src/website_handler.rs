@@ -41,19 +41,23 @@ impl Website {
             }
         }
     }
+
+    fn get(&mut self, path: &str) -> Response {
+        match path {
+            "/" => Response::new(StatusCode::Ok, self.read_file("index.html")),
+            "/hello" => Response::new(StatusCode::Ok, self.read_file("hello.html")),
+            path => match self.read_file(path) {
+                Some(contents) => Response::new(StatusCode::Ok, Some(contents)),
+                None => Response::new(StatusCode::NotFound, None),
+            },
+        }
+    }
 }
 
 impl Handler for Website {
     fn handle_request(&mut self, request: &Request) -> Response {
         match request.method() {
-            Method::GET => match request.path() {
-                "/" => Response::new(StatusCode::Ok, self.read_file("index.html")),
-                "/hello" => Response::new(StatusCode::Ok, self.read_file("hello.html")),
-                path => match self.read_file(path) {
-                    Some(contents) => Response::new(StatusCode::Ok, Some(contents)),
-                    None => Response::new(StatusCode::NotFound, None),
-                },
-            },
+            Method::GET => self.get(request.path()),
             _ => Response::new(StatusCode::NotFound, None),
         }
     }

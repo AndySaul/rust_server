@@ -18,7 +18,11 @@ impl Response {
             None => "",
         };
 
-        println!("Response: {} {}\n", self.status_code, self.status_code.reason_phrase());
+        println!(
+            "Response: {} {}\n",
+            self.status_code,
+            self.status_code.reason_phrase()
+        );
 
         write!(
             stream,
