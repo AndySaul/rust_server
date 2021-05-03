@@ -13,7 +13,7 @@ pub trait Handler {
 }
 
 pub struct Server {
-    address: String,
+    pub address: String,
 }
 
 impl Server {
@@ -51,15 +51,5 @@ impl Server {
                 }
             }
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn this_test_will_pass() {
-        let server = super::Server::new("127.0.0.1".to_string());
-        assert_eq!(server.address, "127.0.0.1");
     }
 }
