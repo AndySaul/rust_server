@@ -8,6 +8,14 @@ This is based on the
 [Udemy course](https://www.udemy.com/course/rust-fundamentals/ "Learn Rust by Building Real Applications")
 and the [Rust Book](https://doc.rust-lang.org/book/title-page.html "The Rust Programming Language")
 
+## Getting started
+
+* Run this crate
+    * ```cargo run```
+* Browse to the server address
+    * http://127.0.0.1:8080/ 
+    * http://127.0.0.1:8080/hello
+
 ## Installing rust
 
 https://www.rust-lang.org/tools/install
@@ -29,17 +37,18 @@ Format all files in the project using Rust standardized formatting:
 cargo fmt
 ```
 
-Build project:
-```rust
-cargo build
-```
-
 Build & run in debug mode:
 ```rust
 cargo run
 ```
 
-Run with release optimizations:
+Build debug binaries in ./target/debug
+```rust
+cargo build
+```
+
+
+Build release binaries in ./target/release
 ```rust
 cargo build --release
 ```
