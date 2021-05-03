@@ -24,28 +24,33 @@ impl Server {
     pub fn run(self, mut handler: impl Handler) {
         println!("listening on {}", self.address);
 
-        let listener = TcpListener::bind(&self.address).unwrap();
+        let mut listener = TcpListener::bind(&self.address).unwrap();
 
         loop {
-            match listener.accept() {
-                Err(e) => println!("Failed to establish connection: {}", e),
+            self.wait_for_connection(&mut handler, &mut listener);
+        }
+    }
 
-                Ok((mut stream, _)) => {
-                    let mut buffer = [0; 1024];
-                    match stream.read(&mut buffer) {
-                        Err(e) => println!("Failed to read from connection: {}", e),
+    pub fn wait_for_connection(&self, handler: &mut impl Handler, listener: &mut TcpListener) {
+        match listener.accept() {
+            Err(e) => println!("Failed to establish connection: {}", e),
 
-                        Ok(_) => {
-                            println!("Received a request: {}", String::from_utf8_lossy(&buffer));
+            Ok((mut stream, _)) => {
 
-                            let response = match Request::try_from(&buffer[..]) {
-                                Ok(request) => handler.handle_request(&request),
-                                Err(e) => handler.handle_bad_request(&e),
-                            };
+                let mut buffer = [0; 1024];
+                match stream.read(&mut buffer) {
+                    Err(e) => println!("Failed to read from connection: {}", e),
 
-                            if let Err(e) = response.send(&mut stream) {
-                                println!("Failed to send response: {}", e);
-                            }
+                    Ok(_) => {
+                        println!("Received a request: {}", String::from_utf8_lossy(&buffer));
+
+                        let response = match Request::try_from(&buffer[..]) {
+                            Ok(request) => handler.handle_request(&request),
+                            Err(e) => handler.handle_bad_request(&e),
+                        };
+
+                        if let Err(e) = response.send(&mut stream) {
+                            println!("Failed to send response: {}", e);
                         }
                     }
                 }
