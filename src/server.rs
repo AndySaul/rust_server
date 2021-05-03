@@ -23,8 +23,10 @@ impl Server {
 
     pub fn run(self, mut handler: impl Handler) {
         println!("listening on {}", self.address);
+
         match TcpListener::bind(&self.address) {
             Err(e) => println!("{}", e),
+
             Ok(mut listener) => loop {
                 wait_for_connection(&mut handler, &mut listener);
             },
