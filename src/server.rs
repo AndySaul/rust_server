@@ -21,11 +21,11 @@ impl Server {
         Self { address }
     }
 
-    pub fn run(self, mut handler: impl Handler) {
+    pub fn run(self, mut handler: impl Handler) -> std::io::Result<()> {
         println!("listening on {}", self.address);
 
         match TcpListener::bind(&self.address) {
-            Err(e) => println!("{}", e),
+            Err(e) => Err(e),
 
             Ok(mut listener) => loop {
                 wait_for_connection(&mut handler, &mut listener);
