@@ -1,7 +1,7 @@
 use crate::http::{ParseError, Request, Response, StatusCode};
 use std::convert::TryFrom;
-use std::io::Read;
-use std::net::{TcpListener, TcpStream};
+use std::io::{Read, Result, Write};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 
 pub trait Handler {
     fn handle_request(&mut self, request: &Request) -> Response;
@@ -24,23 +24,23 @@ impl Server {
     pub fn run(self, mut handler: impl Handler) -> std::io::Result<()> {
         println!("listening on {}", self.address);
 
-        let mut listener = TcpListener::bind(&self.address)?;
+        let listener = TcpListener::bind(&self.address)?;
 
         loop {
-            wait_for_connection(&mut handler, &mut listener);
+            wait_for_connection(&mut handler, listener.accept());
         }
     }
 }
 
-pub fn wait_for_connection(handler: &mut impl Handler, listener: &mut TcpListener) {
-    match listener.accept() {
+pub fn wait_for_connection(handler: &mut impl Handler, result: Result<(TcpStream, SocketAddr)>) {
+    match result {
         Err(e) => println!("Failed to establish connection: {}", e),
 
         Ok((mut stream, _)) => handle_request(handler, &mut stream),
     }
 }
 
-pub fn handle_request(handler: &mut impl Handler, stream: &mut TcpStream) {
+pub fn handle_request(handler: &mut impl Handler, mut stream: impl Read + Write) {
     let mut buffer = [0; 1024];
     match stream.read(&mut buffer) {
         Err(e) => println!("Failed to read from connection: {}", e),
@@ -53,7 +53,7 @@ pub fn handle_request(handler: &mut impl Handler, stream: &mut TcpStream) {
                 Err(e) => handler.handle_bad_request(&e),
             };
 
-            if let Err(e) = response.send(stream) {
+            if let Err(e) = response.send(&mut stream) {
                 println!("Failed to send response: {}", e);
             }
         }
