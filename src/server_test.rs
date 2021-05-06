@@ -22,30 +22,22 @@ impl server::Handler for FakeHandler {
 
 struct FakeStream {
     request: String,
-    read_was_called: bool,
-    write_was_called: bool,
 }
 
 impl FakeStream {
     pub fn new(request: String) -> Self {
-        Self {
-            request: request,
-            read_was_called: false,
-            write_was_called: false,
-        }
+        Self { request: request }
     }
 }
 
 impl Read for FakeStream {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        self.read_was_called = true;
         let mut b = buf;
         b.write(self.request.as_bytes())
     }
 }
 impl Write for FakeStream {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        self.write_was_called = true;
         Ok(buf.len())
     }
 
@@ -110,10 +102,7 @@ fn handler_is_called_when_there_is_a_valid_request() {
 fn handler_is_not_called_when_there_is_an_invalid_request() {
     let mut handler = FakeHandler::new();
 
-    server::wait_for_connection(
-        &mut handler,
-        FakeListener::request("GET / ".to_string()),
-    );
+    server::wait_for_connection(&mut handler, FakeListener::request("GET / ".to_string()));
 
     assert_eq!(handler.was_called, false);
 }
