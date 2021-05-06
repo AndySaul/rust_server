@@ -1,7 +1,7 @@
 use crate::http::{ParseError, Request, Response, StatusCode};
 use std::convert::TryFrom;
 use std::io::{Read, Result, Write};
-use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener};
 
 pub trait Handler {
     fn handle_request(&mut self, request: &Request) -> Response;
@@ -21,7 +21,7 @@ impl Server {
         Self { address }
     }
 
-    pub fn run(self, mut handler: impl Handler) -> std::io::Result<()> {
+    pub fn run(self, mut handler: impl Handler) -> Result<()> {
         println!("listening on {}", self.address);
 
         let listener = TcpListener::bind(&self.address)?;
@@ -32,7 +32,10 @@ impl Server {
     }
 }
 
-pub fn wait_for_connection(handler: &mut impl Handler, result: Result<(TcpStream, SocketAddr)>) {
+pub fn wait_for_connection(
+    handler: &mut impl Handler,
+    result: Result<(impl Read + Write, SocketAddr)>,
+) {
     match result {
         Err(e) => println!("Failed to establish connection: {}", e),
 
