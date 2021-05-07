@@ -10,8 +10,20 @@ mod website_handler;
 mod server_test;
 
 fn main() -> std::io::Result<()> {
-    let server = Server::new("127.0.0.1:8080".to_string());
+    let server = Server::new(address());
     server.run(Website::new(public_path()))
+}
+
+fn address() -> String {
+    let args: Vec<String> = env::args().collect();
+    //println!("{:?}", args);
+
+    let address = if args.len() > 1 {
+        &args[1]
+    } else {
+        "127.0.0.1:8080"
+    };
+    address.to_string()
 }
 
 fn public_path() -> String {
