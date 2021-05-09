@@ -5,7 +5,6 @@ use std::env;
 
 fn main() -> std::io::Result<()> {
     let parser = Parser::new();
-
     let server = Server::new(parser.address());
     server.run(Website::new(public_path()))
 }

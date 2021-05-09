@@ -11,7 +11,8 @@ impl<'a> Parser<'a> {
         let args = clap_app!(app=>
             (version: "0.1.0")
             (about: "Basic REST server")
-            (@arg ADDRESS: +required "Sets the IP address to listen on")
+            (@arg ADDRESS: +required 
+                "Sets the IP address to listen on, e.g. 127.0.0.1:8080")
         )
         .get_matches();
         Self { args }
