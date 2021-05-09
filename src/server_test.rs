@@ -26,7 +26,7 @@ struct FakeStream {
 
 impl FakeStream {
     pub fn new(request: String) -> Self {
-        Self { request: request }
+        Self { request }
     }
 }
 
