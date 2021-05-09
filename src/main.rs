@@ -2,9 +2,6 @@ use server::website_handler::Website;
 use server::Server;
 use std::env;
 
-#[cfg(test)]
-mod server_test;
-
 fn main() -> std::io::Result<()> {
     let server = Server::new(address());
     server.run(Website::new(public_path()))

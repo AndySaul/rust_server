@@ -1,4 +1,4 @@
-use super::*;
+use server::Server;
 use server::http::{Request, Response, StatusCode};
 use std::io::{Error, ErrorKind, Read, Result, Write};
 use std::net::SocketAddr;
