@@ -9,13 +9,13 @@ pub struct Parser<'a> {
 impl<'a> Parser<'a> {
     pub fn new() -> Self {
         Self {
-            args: clap_app!(app=>
-                (version: "0.1.0")
+            args: clap_app!(server=>
+                (version: env!("CARGO_PKG_VERSION"))
                 (about: "Basic REST server")
                 (@arg ADDRESS: +required
                     "Sets the IP address to listen on, e.g. 127.0.0.1:8080")
             )
-            .get_matches(),
+            .get_matches()
         }
     }
     pub fn address(self) -> String {
