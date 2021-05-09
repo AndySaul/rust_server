@@ -102,7 +102,10 @@ fn handler_is_called_when_there_is_a_valid_request() {
 fn handler_is_not_called_when_there_is_an_invalid_request() {
     let mut handler = FakeHandler::new();
 
-    wait_for_connection(&mut handler, FakeListener::request("GET / ".to_string()));
+    wait_for_connection(
+        &mut handler,
+        FakeListener::request("not a request".to_string()),
+    );
 
     assert_eq!(handler.was_called, false);
 }
