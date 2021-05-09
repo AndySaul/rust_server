@@ -1,5 +1,5 @@
-use super::http::{Method, Request, Response, StatusCode};
-use super::server::Handler;
+use crate::http::{Method, Request, Response, StatusCode};
+use crate::Handler;
 use std::fs;
 use std::path::PathBuf;
 

@@ -1,10 +1,6 @@
+use server::website_handler::Website;
 use server::Server;
 use std::env;
-use website_handler::Website;
-
-mod http;
-mod server;
-mod website_handler;
 
 #[cfg(test)]
 mod server_test;
