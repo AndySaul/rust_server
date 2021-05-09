@@ -1,5 +1,5 @@
 use server::http::{Request, Response, StatusCode};
-use server::Server;
+use server::{wait_for_connection, Server};
 use std::io::{Error, ErrorKind, Read, Result, Write};
 use std::net::SocketAddr;
 
@@ -81,7 +81,7 @@ fn does_not_run_with_invalid_ip_address() {
 fn handler_is_not_called_when_there_is_a_connection_error() {
     let mut handler = FakeHandler::new();
 
-    server::wait_for_connection(&mut handler, FakeListener::connection_error());
+    wait_for_connection(&mut handler, FakeListener::connection_error());
 
     assert_eq!(handler.was_called, false);
 }
@@ -90,7 +90,7 @@ fn handler_is_not_called_when_there_is_a_connection_error() {
 fn handler_is_called_when_there_is_a_valid_request() {
     let mut handler = FakeHandler::new();
 
-    server::wait_for_connection(
+    wait_for_connection(
         &mut handler,
         FakeListener::request("GET / HTTP/1.1\r\n".to_string()),
     );
@@ -102,7 +102,7 @@ fn handler_is_called_when_there_is_a_valid_request() {
 fn handler_is_not_called_when_there_is_an_invalid_request() {
     let mut handler = FakeHandler::new();
 
-    server::wait_for_connection(&mut handler, FakeListener::request("GET / ".to_string()));
+    wait_for_connection(&mut handler, FakeListener::request("GET / ".to_string()));
 
     assert_eq!(handler.was_called, false);
 }
