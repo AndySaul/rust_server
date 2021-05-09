@@ -10,7 +10,7 @@ and the [Rust Book](https://doc.rust-lang.org/book/title-page.html "The Rust Pro
 ## Getting started
 
 * Run this crate
-    * ```cargo run```
+    * ```cargo run 127.0.0.1:8080```
 * Browse to the server address
     * http://127.0.0.1:8080/ 
     * http://127.0.0.1:8080/hello
