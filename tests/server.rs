@@ -1,5 +1,5 @@
-use server::Server;
 use server::http::{Request, Response, StatusCode};
+use server::Server;
 use std::io::{Error, ErrorKind, Read, Result, Write};
 use std::net::SocketAddr;
 
