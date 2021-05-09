@@ -1,13 +1,22 @@
-use std::env;
+extern crate clap;
 
-pub fn address() -> String {
-    let args: Vec<String> = env::args().collect();
-    //println!("{:?}", args);
+use clap::{clap_app, ArgMatches};
 
-    let address = if args.len() > 1 {
-        &args[1]
-    } else {
-        "127.0.0.1:8080"
-    };
-    address.to_string()
+pub struct Parser<'a> {
+    pub args: ArgMatches<'a>,
+}
+
+impl<'a> Parser<'a> {
+    pub fn new() -> Self {
+        let args = clap_app!(app=>
+            (version: "0.1.0")
+            (about: "Basic REST server")
+            (@arg ADDRESS: +required "Sets the IP address to listen on")
+        )
+        .get_matches();
+        Self { args }
+    }
+    pub fn address(self) -> String {
+        self.args.value_of("ADDRESS").unwrap().to_string()
+    }
 }

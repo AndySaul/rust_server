@@ -1,5 +1,5 @@
-pub mod http;
 pub mod args;
+pub mod http;
 pub mod website_handler;
 
 use crate::http::{ParseError, Request, Response, StatusCode};

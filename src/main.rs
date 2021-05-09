@@ -1,10 +1,12 @@
-use server::args::address;
+use server::args::Parser;
 use server::website_handler::Website;
 use server::Server;
 use std::env;
 
 fn main() -> std::io::Result<()> {
-    let server = Server::new(address());
+    let parser = Parser::new();
+
+    let server = Server::new(parser.address());
     server.run(Website::new(public_path()))
 }
 
