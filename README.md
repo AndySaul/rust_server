@@ -2,7 +2,6 @@
 
 My first stab at Rust. Currently, this is a single-threaded webserver with limited features. Next steps:
 - Make it multithreaded
-- Add unit tests
 
 This is based on the 
 [Udemy course](https://www.udemy.com/course/rust-fundamentals/ "Learn Rust by Building Real Applications")
