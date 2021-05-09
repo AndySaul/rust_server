@@ -21,14 +21,14 @@ impl Response {
         println!(
             "Response: {} {}\n",
             self.status_code,
-            self.status_code.reason_phrase()
+            self.status_code.as_str()
         );
 
         write!(
             stream,
             "HTTP/1.1 {} {}\r\n\r\n{}",
             self.status_code,
-            self.status_code.reason_phrase(),
+            self.status_code.as_str(),
             body
         )
     }
